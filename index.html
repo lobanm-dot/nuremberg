@@ -840,24 +840,40 @@
             
             <form id="reflection-form" onsubmit="event.preventDefault(); app.submitReflections();">
                 <div class="reflection-q">
-                    <label>1. Is “just following orders” ever a valid defense? Why or why not?</label>
-                    <textarea id="ref-1" required></textarea>
+                    <label>1. Is “just following orders” ever a valid defense?</label>
+                    <div class="slider-container" style="margin-bottom: 10px; padding: 1rem;">
+                        <div class="slider-labels">
+                            <span>Absolutely Not</span>
+                            <span>Undecided</span>
+                            <span>Absolutely Yes</span>
+                        </div>
+                        <input type="range" id="ref-slider-1" min="-50" max="50" value="0">
+                    </div>
+                    <textarea id="ref-text-1" required placeholder="Explain why..."></textarea>
                 </div>
                 <div class="reflection-q">
-                    <label>2. Should national leaders be judged more harshly than lower-level participants? Why?</label>
-                    <textarea id="ref-2" required></textarea>
+                    <label>2. Should national leaders be judged more harshly than lower-level participants?</label>
+                    <div class="slider-container" style="margin-bottom: 10px; padding: 1rem;">
+                        <div class="slider-labels">
+                            <span>No, judge equally</span>
+                            <span>Undecided</span>
+                            <span>Yes, more harshly</span>
+                        </div>
+                        <input type="range" id="ref-slider-2" min="-50" max="50" value="0">
+                    </div>
+                    <textarea id="ref-text-2" required placeholder="Explain why..."></textarea>
                 </div>
                 <div class="reflection-q">
-                    <label>3. Which defendant was hardest for you to judge and why?</label>
-                    <textarea id="ref-3" required></textarea>
-                </div>
-                <div class="reflection-q">
-                    <label>4. What should justice look like after atrocities on this massive scale?</label>
-                    <textarea id="ref-4" required></textarea>
-                </div>
-                <div class="reflection-q">
-                    <label>5. Why were the Nuremberg Trials important for the future of international law?</label>
-                    <textarea id="ref-5" required></textarea>
+                    <label>3. Were the Nuremberg Trials important for the future of international law?</label>
+                    <div class="slider-container" style="margin-bottom: 10px; padding: 1rem;">
+                        <div class="slider-labels">
+                            <span>Not Important</span>
+                            <span>Undecided</span>
+                            <span>Very Important</span>
+                        </div>
+                        <input type="range" id="ref-slider-3" min="-50" max="50" value="0">
+                    </div>
+                    <textarea id="ref-text-3" required placeholder="Explain why..."></textarea>
                 </div>
 
                 <div class="btn-container">
@@ -1200,11 +1216,18 @@ const app = {
 
     submitReflections: function() {
         this.state.reflections = {
-            q1: document.getElementById('ref-1').value.trim(),
-            q2: document.getElementById('ref-2').value.trim(),
-            q3: document.getElementById('ref-3').value.trim(),
-            q4: document.getElementById('ref-4').value.trim(),
-            q5: document.getElementById('ref-5').value.trim()
+            q1: {
+                slider: document.getElementById('ref-slider-1').value,
+                text: document.getElementById('ref-text-1').value.trim()
+            },
+            q2: {
+                slider: document.getElementById('ref-slider-2').value,
+                text: document.getElementById('ref-text-2').value.trim()
+            },
+            q3: {
+                slider: document.getElementById('ref-slider-3').value,
+                text: document.getElementById('ref-text-3').value.trim()
+            }
         };
         this.saveStateLocally();
         this.generateSummary();
@@ -1241,12 +1264,23 @@ const app = {
         // Populate Reflections
         const refContainer = document.getElementById('summary-reflections');
         const refs = this.state.reflections;
+        
+        const formatRef = (data, left, right) => {
+            // Handle cases where data might be missing or in old text format
+            if (!data || typeof data === 'string') return data || 'N/A'; 
+            
+            let stance = "Undecided";
+            if (data.slider < -15) stance = left;
+            if (data.slider > 15) stance = right;
+            
+            return `<span style="color: var(--blood-red); font-weight: 600;">Stance:</span> ${stance}<br>
+                    <span style="color: var(--blood-red); font-weight: 600;">Reasoning:</span> ${data.text}`;
+        };
+
         refContainer.innerHTML = `
-            <p><strong>1. "Just following orders":</strong> ${refs.q1 || 'N/A'}</p>
-            <p><strong>2. Leadership vs Lower-level:</strong> ${refs.q2 || 'N/A'}</p>
-            <p><strong>3. Hardest to judge:</strong> ${refs.q3 || 'N/A'}</p>
-            <p><strong>4. Justice after massive atrocities:</strong> ${refs.q4 || 'N/A'}</p>
-            <p><strong>5. Importance for international law:</strong> ${refs.q5 || 'N/A'}</p>
+            <p style="margin-bottom: 15px;"><strong>1. Is "just following orders" a valid defense?</strong><br> ${formatRef(refs.q1, "Absolutely Not", "Absolutely Yes")}</p>
+            <p style="margin-bottom: 15px;"><strong>2. Should national leaders be judged more harshly?</strong><br> ${formatRef(refs.q2, "No, judge equally", "Yes, more harshly")}</p>
+            <p style="margin-bottom: 15px;"><strong>3. Were the trials important for international law?</strong><br> ${formatRef(refs.q3, "Not Important", "Very Important")}</p>
         `;
     },
 
