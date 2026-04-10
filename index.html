@@ -447,6 +447,19 @@
             border-left: 4px solid var(--faded-ink);
         }
 
+        .typewriter-text ul {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .typewriter-text li {
+            margin-bottom: 0.8rem;
+        }
+
+        .typewriter-text strong {
+            color: var(--blood-red);
+        }
+
         /* Judgment Form */
         .form-group {
             margin-bottom: 2rem;
@@ -547,6 +560,18 @@
             background: var(--parchment-dark);
             border-radius: 3px;
             border: 1px solid var(--wood-light);
+        }
+
+        /* Scale of Justice SVG */
+        .scale-wrapper {
+            width: 120px;
+            height: 100px;
+            margin: 0 auto 10px auto;
+        }
+
+        #scale-beam {
+            transform-origin: 60px 25px;
+            transition: transform 0.1s linear;
         }
 
         /* Final Reflection Section */
@@ -778,12 +803,42 @@
                         <!-- Charges -->
                         <div class="form-group">
                             <label class="main-label">1. Applicable Charges (Select all that apply)</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-label"><input type="checkbox" name="charge" value="Crimes Against Peace" onchange="app.handleChargeChange(this)"> Crimes Against Peace</label>
-                                <label class="checkbox-label"><input type="checkbox" name="charge" value="War Crimes" onchange="app.handleChargeChange(this)"> War Crimes</label>
-                                <label class="checkbox-label"><input type="checkbox" name="charge" value="Crimes Against Humanity" onchange="app.handleChargeChange(this)"> Crimes Against Humanity</label>
-                                <label class="checkbox-label"><input type="checkbox" name="charge" value="Conspiracy to Commit Crimes" onchange="app.handleChargeChange(this)"> Conspiracy</label>
-                                <label class="checkbox-label" style="color: var(--blood-red);"><input type="checkbox" name="charge" value="Not Guilty" id="charge-not-guilty" onchange="app.handleNotGuiltyChange(this)"> Not Guilty</label>
+                            <div class="checkbox-group" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                                <label class="checkbox-label" style="align-items: flex-start;">
+                                    <input type="checkbox" name="charge" value="Crimes Against Peace" onchange="app.handleChargeChange(this)" style="margin-top: 5px;">
+                                    <div>
+                                        <strong>Crimes Against Peace</strong><br>
+                                        <span style="font-size: 0.9rem; color: var(--faded-ink); font-style: italic;">Planning, initiating, and waging wars of aggression.</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-label" style="align-items: flex-start;">
+                                    <input type="checkbox" name="charge" value="War Crimes" onchange="app.handleChargeChange(this)" style="margin-top: 5px;">
+                                    <div>
+                                        <strong>War Crimes</strong><br>
+                                        <span style="font-size: 0.9rem; color: var(--faded-ink); font-style: italic;">Violations of the laws of war and mistreatment of civilians/prisoners.</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-label" style="align-items: flex-start;">
+                                    <input type="checkbox" name="charge" value="Crimes Against Humanity" onchange="app.handleChargeChange(this)" style="margin-top: 5px;">
+                                    <div>
+                                        <strong>Crimes Against Humanity</strong><br>
+                                        <span style="font-size: 0.9rem; color: var(--faded-ink); font-style: italic;">Systematic acts against civilians on a large scale, including genocide.</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-label" style="align-items: flex-start;">
+                                    <input type="checkbox" name="charge" value="Conspiracy to Commit Crimes" onchange="app.handleChargeChange(this)" style="margin-top: 5px;">
+                                    <div>
+                                        <strong>Conspiracy to Commit Crimes</strong><br>
+                                        <span style="font-size: 0.9rem; color: var(--faded-ink); font-style: italic;">Coordinated planning among leaders to carry out the crimes above.</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-label" style="align-items: flex-start; grid-column: 1 / -1; border-top: 1px dashed var(--parchment-dark); padding-top: 10px;">
+                                    <input type="checkbox" name="charge" value="Not Guilty" id="charge-not-guilty" onchange="app.handleNotGuiltyChange(this)" style="margin-top: 5px;">
+                                    <div style="color: var(--blood-red);">
+                                        <strong>Not Guilty</strong><br>
+                                        <span style="font-size: 0.9rem; color: var(--faded-ink); font-style: italic;">Clear of all charges.</span>
+                                    </div>
+                                </label>
                             </div>
                         </div>
 
@@ -804,12 +859,34 @@
                         <div class="form-group">
                             <label class="main-label">3. Weight of Evidence</label>
                             <div class="slider-container">
+                                
+                                <div class="scale-wrapper">
+                                    <svg viewBox="0 0 120 100" width="100%" height="100%">
+                                        <!-- Base & Post -->
+                                        <rect x="45" y="85" width="30" height="10" fill="var(--wood-dark)"/>
+                                        <rect x="56" y="25" width="8" height="60" fill="var(--wood-dark)"/>
+                                        <polygon points="60,15 50,30 70,30" fill="var(--gold)"/>
+                                        <!-- Beam & Pans (Rotates) -->
+                                        <g id="scale-beam">
+                                            <rect x="20" y="23" width="80" height="4" fill="var(--gold)"/>
+                                            <!-- Left Pan -->
+                                            <line x1="20" y1="27" x2="10" y2="60" stroke="var(--gold)" stroke-width="1.5"/>
+                                            <line x1="20" y1="27" x2="30" y2="60" stroke="var(--gold)" stroke-width="1.5"/>
+                                            <path d="M5 60 Q 20 70 35 60 Z" fill="var(--wood-light)"/>
+                                            <!-- Right Pan -->
+                                            <line x1="100" y1="27" x2="90" y2="60" stroke="var(--gold)" stroke-width="1.5"/>
+                                            <line x1="100" y1="27" x2="110" y2="60" stroke="var(--gold)" stroke-width="1.5"/>
+                                            <path d="M85 60 Q 100 70 115 60 Z" fill="var(--wood-light)"/>
+                                        </g>
+                                    </svg>
+                                </div>
+
                                 <div class="slider-labels">
                                     <span>Strongly Defense</span>
                                     <span>Undecided</span>
                                     <span>Strongly Prosecution</span>
                                 </div>
-                                <input type="range" id="evidence-slider" min="-50" max="50" value="0">
+                                <input type="range" id="evidence-slider" min="-50" max="50" value="0" oninput="app.updateScale(this.value)">
                             </div>
                         </div>
 
@@ -954,9 +1031,17 @@ const data = {
             image: "speer.png",
             name: "Albert Speer",
             role: "Minister of Armaments and War Production",
-            overview: "Speer oversaw Nazi war production beginning in 1942. He helped streamline military production and used forced labor from concentration camps and occupied territories to increase output. He supported the Nazi war effort and helped sustain Germany’s ability to continue fighting.",
-            defense: "Your Honors, my client, Albert Speer, is not like the others sitting in this courtroom. He has apologized for the terrible crimes of the Nazi regime and has shown true sadness. He was not a political fanatic, but an architect and a manager who got pulled into the government. Late in the war, he even planned to assassinate Hitler with poison gas, though he did not succeed. He admits he was part of the government, but he was not a mastermind of murder.",
-            prosecution: "Members of the Tribunal, Albert Speer was a top Nazi leader and Hitler’s chief architect. As Minister of Armaments, he kept the German war machine running. How did he do this? By using slave labor. He forced millions of concentration camp prisoners, captured soldiers, and innocent civilians to work in horrible, deadly conditions. His actions directly supported the war and caused the deaths of countless innocent people.",
+            overview: "Speer oversaw Nazi war production beginning in 1942. He helped streamline military production and managed over 14 million workers, including forced laborers pulled from concentration camps and occupied territories. He fully supported the Nazi war effort and his logistical expertise helped sustain Germany’s ability to continue fighting for years.",
+            defense: `<ul>
+                <li><strong>Admission of Guilt:</strong> I am one of the few senior officials to stand before this tribunal, take responsibility for the regime's actions, and express remorse.</li>
+                <li><strong>Apolitical Technician:</strong> I was an architect and a manager, not a political fanatic or mastermind of the Holocaust. I simply managed the economy.</li>
+                <li><strong>Attempted Resistance:</strong> Late in the war, when I realized all was lost, I plotted to assassinate Hitler using poison gas in his bunker, though I was unable to carry it out.</li>
+            </ul>`,
+            prosecution: `<ul>
+                <li><strong>Vital to the War Machine:</strong> As Minister of Armaments, Speer prolonged the war by years through his relentless production of weapons.</li>
+                <li><strong>Master of Slave Labor:</strong> He personally directed a massive slave labor program that managed over 14 million captive workers.</li>
+                <li><strong>Exploitation & Death:</strong> He knowingly forced millions of prisoners of war and concentration camp victims to work in underground factories until they dropped dead from starvation and exhaustion.</li>
+            </ul>`,
             charges: "War Crimes, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Guilty of War Crimes and Crimes Against Humanity. Sentenced to 20 years in Spandau Prison. (He served his full sentence and was released in 1966)."
         },
@@ -965,9 +1050,17 @@ const data = {
             image: "goring.png",
             name: "Hermann Göring",
             role: "Founder of the Gestapo, top Nazi leader, Luftwaffe commander",
-            overview: "Göring was one of the most powerful Nazi officials and a major figure in the regime. He helped shape Nazi policy, helped seize Jewish property, supported anti-Jewish actions, and played a major role in expanding Nazi power.",
-            defense: "Your Honors, Hermann Göring was a loyal soldier who simply followed his leader, Adolf Hitler. As a military man, he had to obey orders. He did not know the terrible details of what happened in the concentration camps. Instead, he tried to act as a diplomat to bring peace to Europe. You cannot punish a man just for being loyal to his country during a time of war.",
-            prosecution: "Members of the Tribunal, Hermann Göring was second only to Hitler in power. He created the secret police, known as the Gestapo. He helped plan the violent attacks against Jewish citizens during Kristallnacht. He ordered the theft of Jewish homes, art, and money across Europe. Do not let him fool you; he knew exactly what was happening. He was a central planner of the Holocaust and this terrible war.",
+            overview: "Göring was second only to Hitler in power. He was instrumental in creating the early concentration camps and established the Gestapo secret police. He helped shape anti-Jewish policy, oversaw the seizure of Jewish property, commanded the German Air Force (Luftwaffe), and played a major role in expanding Nazi power across Europe.",
+            defense: `<ul>
+                <li><strong>Military Loyalty:</strong> I was a loyal soldier acting under the direct orders of my Commander-in-Chief, Adolf Hitler. A military leader cannot question his state in wartime.</li>
+                <li><strong>Diplomatic Efforts:</strong> I attempted to act as a diplomat before the war to secure a peaceful settlement for Germany.</li>
+                <li><strong>Denial of Camp Atrocities:</strong> I was not involved in the day-to-day horrors of the concentration camps; my focus was commanding the Luftwaffe and managing the broader economy.</li>
+            </ul>`,
+            prosecution: `<ul>
+                <li><strong>Architect of Terror:</strong> He founded the Gestapo and established the very first concentration camps in Germany in 1933.</li>
+                <li><strong>Economic Persecution:</strong> He orchestrated the massive theft of Jewish property, art, and businesses across Europe following Kristallnacht.</li>
+                <li><strong>Planning the Final Solution:</strong> In July 1941, Göring gave direct written authorization to SS leader Reinhard Heydrich to organize a "total solution of the Jewish question."</li>
+            </ul>`,
             charges: "Crimes Against Peace, War Crimes, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Guilty on all four counts. Sentenced to death by hanging. (He committed suicide in his cell the night before his execution)."
         },
@@ -976,9 +1069,17 @@ const data = {
             image: "hess.png",
             name: "Rudolf Hess",
             role: "Hitler’s Deputy",
-            overview: "Hess was a prominent Nazi leader deeply involved in spreading Nazi ideology, nationalism, and antisemitism. He supported German expansion and Hitler’s vision. In 1941 he flew to Britain on his own in an attempt to broker peace, was arrested, and spent the rest of the war in British custody.",
-            defense: "Your Honors, look at Rudolf Hess and you will see a man whose mind is broken. He suffers from memory loss and confusion. Furthermore, in 1941, he bravely flew a plane to Scotland all by himself to try and make peace with Britain. The other Nazi leaders did not know about this mission. Because he spent the last several years locked in a British prison, he had no part in the worst crimes of the war.",
-            prosecution: "Members of the Tribunal, before his strange flight to Britain, Rudolf Hess was Hitler’s top deputy. He stood side-by-side with Hitler, writing the unfair laws that stripped Jewish citizens of their rights. He built the systems that trained the Nazi soldiers and death squads. Just because he was captured early in the war does not erase the terrible foundation of hatred and murder that he helped build.",
+            overview: "Hess was a prominent Nazi leader deeply involved in spreading Nazi ideology. He signed into law the Nuremberg Laws in 1935, which stripped Jewish citizens of their rights. In 1941, he secretly flew a plane to Britain on his own in an attempt to broker peace, was arrested, and spent the rest of the war in British custody.",
+            defense: `<ul>
+                <li><strong>Mental Unfitness:</strong> I am suffering from severe memory loss, amnesia, and cannot fully comprehend these proceedings.</li>
+                <li><strong>Unauthorized Peace Mission:</strong> In 1941, I risked my life to fly a plane solo to Scotland to negotiate peace with Britain, without Hitler's permission.</li>
+                <li><strong>Absence during Atrocities:</strong> Because I was held as a British prisoner from 1941 onward, I had no part in the worst crimes and death camps of the Holocaust.</li>
+            </ul>`,
+            prosecution: `<ul>
+                <li><strong>Foundational Nazi Leader:</strong> Hess was Hitler's top deputy and helped dictate the hateful book <em>Mein Kampf</em> while in prison with Hitler in the 1920s.</li>
+                <li><strong>Legalizing Persecution:</strong> He signed the Nuremberg Laws that stripped Jewish people of their citizenship, legally defining who was Jewish and stripping their human rights.</li>
+                <li><strong>Building the System:</strong> He created the organizations and trained the SS leadership that later carried out the Holocaust; he laid the groundwork for the atrocities.</li>
+            </ul>`,
             charges: "Crimes Against Peace, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Guilty of Crimes Against Peace and Conspiracy. Sentenced to life in prison. (He remained in Spandau Prison until his death in 1987)."
         },
@@ -987,9 +1088,17 @@ const data = {
             image: "kaltenbrunner.png",
             name: "Ernst Kaltenbrunner",
             role: "Head of the Reich Security Main Office (RSHA), Senior SS Leader",
-            overview: "Kaltenbrunner coordinated Nazi security and police forces, including the Gestapo and SS operations. He was deeply involved in the machinery of terror and in enforcing Nazi policies against Jews and political enemies.",
-            defense: "Your Honors, Ernst Kaltenbrunner is being blamed for the actions of others. It is true his name is on many documents, but his assistants simply stamped his signature on them without him knowing. He was taking orders from his boss, Heinrich Himmler. His real job was focused on gathering intelligence and spying, not running the camps. He was just a middle-man in a massive government.",
-            prosecution: "Members of the Tribunal, Ernst Kaltenbrunner is the highest-ranking SS leader left alive today. He was in charge of the Nazi police forces and the Gestapo. He personally signed orders to send people to the gas chambers. He inspected the Mauthausen concentration camp and watched how it killed people. He coordinated the mobile death squads that murdered millions. His hands are covered in blood.",
+            overview: "Kaltenbrunner replaced Reinhard Heydrich as head of the RSHA, directly controlling the Gestapo, the criminal police, and the Einsatzgruppen (mobile death squads). He was deeply involved in the machinery of terror, enforcing policies against Jewish citizens and political enemies, and overseeing deportations to extermination camps.",
+            defense: `<ul>
+                <li><strong>Rubber Stamp:</strong> My signature appears on many execution orders, but they were stamped by my assistants using my signature without my knowledge.</li>
+                <li><strong>Chain of Command:</strong> I was merely a middle-manager taking direct orders from my superior, Heinrich Himmler.</li>
+                <li><strong>Intelligence Focus:</strong> My actual duties were focused on foreign intelligence and espionage, not the administration of death camps.</li>
+            </ul>`,
+            prosecution: `<ul>
+                <li><strong>Commander of Terror:</strong> As head of the RSHA, Kaltenbrunner directly controlled the Gestapo and the mobile death squads that murdered millions in Eastern Europe.</li>
+                <li><strong>Direct Involvement:</strong> He personally inspected the Mauthausen concentration camp to witness a demonstration of a gas chamber to ensure its "efficiency."</li>
+                <li><strong>Execution Orders:</strong> He issued the "Bullet Decree," ordering the execution of captured Allied prisoners of war and escaped inmates, violating international law.</li>
+            </ul>`,
             charges: "War Crimes, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Guilty of War Crimes and Crimes Against Humanity. Sentenced to death by hanging."
         },
@@ -998,9 +1107,17 @@ const data = {
             image: "hoss.png",
             name: "Rudolf Höss",
             role: "Commandant of Auschwitz",
-            overview: "Höss oversaw Auschwitz and played a direct role in managing extermination and forced labor. He helped organize mass deportations and the camp’s murder system as part of the Final Solution.",
-            defense: "Your Honors, Rudolf Höss was a soldier given an impossible order by his government. He did not create the terrible policies of the Nazi party; he was just a manager told to carry them out. He viewed his job at Auschwitz like a factory boss trying to meet a quota. While what happened was awful, he was acting as a mindless part of a giant machine. He believed he had no choice but to obey.",
-            prosecution: "Members of the Tribunal, Rudolf Höss was the commander of Auschwitz. He did not just follow orders; he worked hard to make mass murder faster and cheaper. He is the one who chose to use Zyklon B poison gas to kill more people at once. Under his direct command, over a million innocent men, women, and children were murdered. He ran the largest death factory in human history.",
+            overview: "Höss oversaw Auschwitz from 1940 to 1943. Under his leadership, the camp was transformed into the largest killing center in the Nazi empire. He organized the logistics of mass deportations and the camp’s murder system, bearing direct responsibility for the deaths of over a million people.",
+            defense: `<ul>
+                <li><strong>Following Orders:</strong> I was a soldier given an impossible quota by my superiors. I did not invent the policies; I only carried them out.</li>
+                <li><strong>Bureaucratic Detachment:</strong> I viewed my role purely as a camp administrator and factory manager. I acted without emotion or personal hatred.</li>
+                <li><strong>Systemic Pressure:</strong> In a totalitarian state, a soldier cannot question orders from the top without facing severe punishment himself.</li>
+            </ul>`,
+            prosecution: `<ul>
+                <li><strong>Innovator of Mass Murder:</strong> Höss actively sought ways to make killing faster and cheaper, introducing the use of Zyklon B poison gas.</li>
+                <li><strong>Scale of Destruction:</strong> Under his direct command at Auschwitz, over 1.1 million innocent men, women, and children were systematically murdered.</li>
+                <li><strong>Cruel Deception:</strong> He designed a system that tricked victims into entering gas chambers disguised as shower rooms to maintain "order" during the executions.</li>
+            </ul>`,
             charges: "War Crimes, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Tried by the Supreme National Tribunal in Poland (not the main IMT in Nuremberg, though he testified there). Found guilty of murder. Sentenced to death by hanging (executed at Auschwitz in 1947)."
         },
@@ -1009,9 +1126,17 @@ const data = {
             image: "donitz.png",
             name: "Karl Dönitz",
             role: "Commander of the German Navy, later Head of State",
-            overview: "Dönitz led Nazi Germany’s navy and pushed submarine warfare to weaken Allied supply lines. After Hitler’s death, he briefly became head of Germany and tried to negotiate with the Allies while the war was ending.",
-            defense: "Your Honors, Admiral Karl Dönitz is a traditional naval commander. This trial is simply 'victor's justice'—the winners punishing the losers. During a war, a military leader must do whatever it takes to protect his country, and he must work with the head of state. He fought a war at sea, just like the Allied commanders did. You are putting a man on trial simply for doing his job as a soldier.",
-            prosecution: "Members of the Tribunal, Karl Dönitz did not fight a clean war. He commanded the U-boat submarines and ordered his men to sink civilian and merchant ships without warning, breaking the basic rules of war. Furthermore, he was a dedicated supporter of Hitler and the Nazi party. In fact, Hitler trusted him so much that he chose Dönitz to replace him as the leader of Germany. He is fully responsible for the aggressive war he helped wage.",
+            overview: "Dönitz led Nazi Germany’s navy and pushed unrestricted submarine warfare to weaken Allied supply lines, ordering attacks on civilian shipping. Because of his fanatical loyalty, Hitler named him as his successor. After Hitler’s death, Dönitz briefly became head of state before surrendering to the Allies.",
+            defense: `<ul>
+                <li><strong>Standard Military Conduct:</strong> I fought a naval war at sea, employing the same submarine tactics that Allied commanders used against us.</li>
+                <li><strong>Victor's Justice:</strong> This tribunal is simply the winners punishing the losers for standard wartime military actions.</li>
+                <li><strong>Loyal Soldier:</strong> As a military commander, I was obligated to follow the Head of State and defend my country during a total war.</li>
+            </ul>`,
+            prosecution: `<ul>
+                <li><strong>Violating Rules of War:</strong> Dönitz ordered "unrestricted submarine warfare," actively targeting and sinking unarmed civilian and merchant ships.</li>
+                <li><strong>No Rescue Orders:</strong> He issued the "Laconia Order," expressly forbidding his submarine crews from rescuing survivors of torpedoed ships, leaving them to drown.</li>
+                <li><strong>Ideological Supporter:</strong> He was a dedicated Nazi who prolonged the devastating war and was trusted enough by Hitler to be named his successor.</li>
+            </ul>`,
             charges: "Crimes Against Peace, War Crimes, Conspiracy to Commit Crimes",
             historical: "Guilty of Crimes Against Peace and War Crimes. Sentenced to 10 years in prison."
         }
@@ -1115,9 +1240,9 @@ const app = {
         document.getElementById('case-image').alt = def.name;
         document.getElementById('case-name').innerText = def.name;
         document.getElementById('case-role').innerText = def.role;
-        document.getElementById('case-overview').innerText = def.overview;
-        document.getElementById('case-prosecution').innerText = def.prosecution;
-        document.getElementById('case-defense').innerText = def.defense;
+        document.getElementById('case-overview').innerHTML = def.overview;
+        document.getElementById('case-prosecution').innerHTML = def.prosecution;
+        document.getElementById('case-defense').innerHTML = def.defense;
         document.getElementById('case-potential-charges').innerText = def.charges;
 
         // Reset form or load existing
@@ -1142,6 +1267,9 @@ const app = {
             // Reasoning & Slider
             document.getElementById('judgment-reasoning').value = j.reasoning;
             document.getElementById('evidence-slider').value = j.slider;
+            this.updateScale(j.slider);
+        } else {
+            this.updateScale(0);
         }
 
         // Switch to overview tab
@@ -1171,6 +1299,12 @@ const app = {
             const otherCharges = document.querySelectorAll('input[name="charge"]:not(#charge-not-guilty)');
             otherCharges.forEach(cb => cb.checked = false);
         }
+    },
+
+    updateScale: function(value) {
+        // Value is -50 to 50. Divide by 2 to get a gentle rotation angle (-25deg to 25deg)
+        const angle = value / 2;
+        document.getElementById('scale-beam').style.transform = `rotate(${angle}deg)`;
     },
 
     saveJudgment: function() {
