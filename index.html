@@ -447,17 +447,99 @@
             border-left: 4px solid var(--faded-ink);
         }
 
-        .typewriter-text ul {
-            padding-left: 1.5rem;
-            margin-top: 0.5rem;
-        }
-        
-        .typewriter-text li {
-            margin-bottom: 0.8rem;
+        /* Exhibit Reveal UI */
+        .exhibit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 1rem;
         }
 
-        .typewriter-text strong {
+        .exhibit-card {
+            position: relative;
+            background: rgba(0,0,0,0.02);
+            border: 1px solid var(--parchment-dark);
+            border-left: 5px solid var(--wood-dark);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            font-family: 'Special Elite', monospace;
+        }
+
+        .exhibit-card.sealed {
+            cursor: pointer;
+        }
+
+        .exhibit-card.sealed:hover {
+            background: rgba(0,0,0,0.05);
+            transform: translateX(5px);
+            border-left-color: var(--blood-red);
+        }
+
+        .exhibit-content {
+            transition: all 0.5s ease;
+        }
+
+        .exhibit-card.sealed .exhibit-content {
+            filter: blur(5px);
+            opacity: 0.3;
+            user-select: none;
+        }
+
+        .seal-tape {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-3deg);
+            background: var(--stamp-red);
+            color: var(--parchment);
+            padding: 10px 30px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-align: center;
+            border: 2px solid var(--parchment);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            letter-spacing: 2px;
+        }
+
+        .seal-tape small {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            font-style: italic;
+            letter-spacing: 0;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        .exhibit-card.unsealed .seal-tape {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(2) rotate(10deg);
+            pointer-events: none;
+        }
+
+        .exhibit-card.unsealed {
+            cursor: default;
+            border-left-color: var(--blood-red);
+            background: rgba(0,0,0,0.01);
+        }
+
+        .exhibit-card h4 {
             color: var(--blood-red);
+            margin-bottom: 5px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            border-bottom: 1px dashed var(--parchment-dark);
+            padding-bottom: 5px;
+        }
+
+        .exhibit-card p {
+            color: var(--typewriter);
+            font-size: 1.05rem;
+            margin-bottom: 0;
         }
 
         /* Judgment Form */
@@ -782,8 +864,10 @@
                 <!-- Tab: Prosecution -->
                 <div id="tab-prosecution" class="tab-content parchment">
                     <h3>Case for the Prosecution</h3>
-                    <div class="typewriter-text" id="case-prosecution"></div>
-                    <div class="mt-2">
+                    <p style="font-style: italic; color: var(--wood-dark); margin-bottom: 10px;">Click the sealed exhibits below to reveal the evidence.</p>
+                    <div id="case-prosecution-exhibits"></div>
+                    
+                    <div class="mt-2" style="border-top: 1px solid var(--parchment-dark); padding-top: 10px;">
                         <span class="label" style="color: var(--blood-red);">Potentially Relevant Charges:</span>
                         <p id="case-potential-charges" style="font-weight: 600;"></p>
                     </div>
@@ -792,7 +876,8 @@
                 <!-- Tab: Defense -->
                 <div id="tab-defense" class="tab-content parchment">
                     <h3>Statement of the Defense</h3>
-                    <div class="typewriter-text" id="case-defense"></div>
+                    <p style="font-style: italic; color: var(--wood-dark); margin-bottom: 10px;">Click the sealed exhibits below to reveal the defense's arguments.</p>
+                    <div id="case-defense-exhibits"></div>
                 </div>
 
                 <!-- Tab: Judgment (Form) -->
@@ -1032,16 +1117,16 @@ const data = {
             name: "Albert Speer",
             role: "Minister of Armaments and War Production",
             overview: "Speer oversaw Nazi war production beginning in 1942. He helped streamline military production and managed over 14 million workers, including forced laborers pulled from concentration camps and occupied territories. He fully supported the Nazi war effort and his logistical expertise helped sustain Germany’s ability to continue fighting for years.",
-            defense: `<ul>
-                <li><strong>Admission of Guilt:</strong> I am one of the few senior officials to stand before this tribunal, take responsibility for the regime's actions, and express remorse.</li>
-                <li><strong>Apolitical Technician:</strong> I was an architect and a manager, not a political fanatic or mastermind of the Holocaust. I simply managed the economy.</li>
-                <li><strong>Attempted Resistance:</strong> Late in the war, when I realized all was lost, I plotted to assassinate Hitler using poison gas in his bunker, though I was unable to carry it out.</li>
-            </ul>`,
-            prosecution: `<ul>
-                <li><strong>Vital to the War Machine:</strong> As Minister of Armaments, Speer prolonged the war by years through his relentless production of weapons.</li>
-                <li><strong>Master of Slave Labor:</strong> He personally directed a massive slave labor program that managed over 14 million captive workers.</li>
-                <li><strong>Exploitation & Death:</strong> He knowingly forced millions of prisoners of war and concentration camp victims to work in underground factories until they dropped dead from starvation and exhaustion.</li>
-            </ul>`,
+            defense: [
+                { title: "Admission of Guilt", text: "I am one of the few senior officials to stand before this tribunal, take responsibility for the regime's actions, and express remorse." },
+                { title: "Apolitical Technician", text: "I was an architect and a manager, not a political fanatic or mastermind of the Holocaust. I simply managed the economy." },
+                { title: "Attempted Resistance", text: "Late in the war, when I realized all was lost, I plotted to assassinate Hitler using poison gas in his bunker, though I was unable to carry it out." }
+            ],
+            prosecution: [
+                { title: "Vital to the War Machine", text: "As Minister of Armaments, Speer prolonged the war by years through his relentless production of weapons." },
+                { title: "Master of Slave Labor", text: "He personally directed a massive slave labor program that managed over 14 million captive workers." },
+                { title: "Exploitation & Death", text: "He knowingly forced millions of prisoners of war and concentration camp victims to work in underground factories until they dropped dead from starvation and exhaustion." }
+            ],
             charges: "War Crimes, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Guilty of War Crimes and Crimes Against Humanity. Sentenced to 20 years in Spandau Prison. (He served his full sentence and was released in 1966)."
         },
@@ -1051,16 +1136,16 @@ const data = {
             name: "Hermann Göring",
             role: "Founder of the Gestapo, top Nazi leader, Luftwaffe commander",
             overview: "Göring was second only to Hitler in power. He was instrumental in creating the early concentration camps and established the Gestapo secret police. He helped shape anti-Jewish policy, oversaw the seizure of Jewish property, commanded the German Air Force (Luftwaffe), and played a major role in expanding Nazi power across Europe.",
-            defense: `<ul>
-                <li><strong>Military Loyalty:</strong> I was a loyal soldier acting under the direct orders of my Commander-in-Chief, Adolf Hitler. A military leader cannot question his state in wartime.</li>
-                <li><strong>Diplomatic Efforts:</strong> I attempted to act as a diplomat before the war to secure a peaceful settlement for Germany.</li>
-                <li><strong>Denial of Camp Atrocities:</strong> I was not involved in the day-to-day horrors of the concentration camps; my focus was commanding the Luftwaffe and managing the broader economy.</li>
-            </ul>`,
-            prosecution: `<ul>
-                <li><strong>Architect of Terror:</strong> He founded the Gestapo and established the very first concentration camps in Germany in 1933.</li>
-                <li><strong>Economic Persecution:</strong> He orchestrated the massive theft of Jewish property, art, and businesses across Europe following Kristallnacht.</li>
-                <li><strong>Planning the Final Solution:</strong> In July 1941, Göring gave direct written authorization to SS leader Reinhard Heydrich to organize a "total solution of the Jewish question."</li>
-            </ul>`,
+            defense: [
+                { title: "Military Loyalty", text: "I was a loyal soldier acting under the direct orders of my Commander-in-Chief, Adolf Hitler. A military leader cannot question his state in wartime." },
+                { title: "Diplomatic Efforts", text: "I attempted to act as a diplomat before the war to secure a peaceful settlement for Germany." },
+                { title: "Denial of Camp Atrocities", text: "I was not involved in the day-to-day horrors of the concentration camps; my focus was commanding the Luftwaffe and managing the broader economy." }
+            ],
+            prosecution: [
+                { title: "Architect of Terror", text: "He founded the Gestapo and established the very first concentration camps in Germany in 1933." },
+                { title: "Economic Persecution", text: "He orchestrated the massive theft of Jewish property, art, and businesses across Europe following Kristallnacht." },
+                { title: "Planning the Final Solution", text: "In July 1941, Göring gave direct written authorization to SS leader Reinhard Heydrich to organize a 'total solution of the Jewish question.'" }
+            ],
             charges: "Crimes Against Peace, War Crimes, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Guilty on all four counts. Sentenced to death by hanging. (He committed suicide in his cell the night before his execution)."
         },
@@ -1070,16 +1155,16 @@ const data = {
             name: "Rudolf Hess",
             role: "Hitler’s Deputy",
             overview: "Hess was a prominent Nazi leader deeply involved in spreading Nazi ideology. He signed into law the Nuremberg Laws in 1935, which stripped Jewish citizens of their rights. In 1941, he secretly flew a plane to Britain on his own in an attempt to broker peace, was arrested, and spent the rest of the war in British custody.",
-            defense: `<ul>
-                <li><strong>Mental Unfitness:</strong> I am suffering from severe memory loss, amnesia, and cannot fully comprehend these proceedings.</li>
-                <li><strong>Unauthorized Peace Mission:</strong> In 1941, I risked my life to fly a plane solo to Scotland to negotiate peace with Britain, without Hitler's permission.</li>
-                <li><strong>Absence during Atrocities:</strong> Because I was held as a British prisoner from 1941 onward, I had no part in the worst crimes and death camps of the Holocaust.</li>
-            </ul>`,
-            prosecution: `<ul>
-                <li><strong>Foundational Nazi Leader:</strong> Hess was Hitler's top deputy and helped dictate the hateful book <em>Mein Kampf</em> while in prison with Hitler in the 1920s.</li>
-                <li><strong>Legalizing Persecution:</strong> He signed the Nuremberg Laws that stripped Jewish people of their citizenship, legally defining who was Jewish and stripping their human rights.</li>
-                <li><strong>Building the System:</strong> He created the organizations and trained the SS leadership that later carried out the Holocaust; he laid the groundwork for the atrocities.</li>
-            </ul>`,
+            defense: [
+                { title: "Mental Unfitness", text: "I am suffering from severe memory loss, amnesia, and cannot fully comprehend these proceedings." },
+                { title: "Unauthorized Peace Mission", text: "In 1941, I risked my life to fly a plane solo to Scotland to negotiate peace with Britain, without Hitler's permission." },
+                { title: "Absence during Atrocities", text: "Because I was held as a British prisoner from 1941 onward, I had no part in the worst crimes and death camps of the Holocaust." }
+            ],
+            prosecution: [
+                { title: "Foundational Nazi Leader", text: "Hess was Hitler's top deputy and helped dictate the hateful book <em>Mein Kampf</em> while in prison with Hitler in the 1920s." },
+                { title: "Legalizing Persecution", text: "He signed the Nuremberg Laws that stripped Jewish people of their citizenship, legally defining who was Jewish and stripping their human rights." },
+                { title: "Building the System", text: "He created the organizations and trained the SS leadership that later carried out the Holocaust; he laid the groundwork for the atrocities." }
+            ],
             charges: "Crimes Against Peace, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Guilty of Crimes Against Peace and Conspiracy. Sentenced to life in prison. (He remained in Spandau Prison until his death in 1987)."
         },
@@ -1089,16 +1174,16 @@ const data = {
             name: "Ernst Kaltenbrunner",
             role: "Head of the Reich Security Main Office (RSHA), Senior SS Leader",
             overview: "Kaltenbrunner replaced Reinhard Heydrich as head of the RSHA, directly controlling the Gestapo, the criminal police, and the Einsatzgruppen (mobile death squads). He was deeply involved in the machinery of terror, enforcing policies against Jewish citizens and political enemies, and overseeing deportations to extermination camps.",
-            defense: `<ul>
-                <li><strong>Rubber Stamp:</strong> My signature appears on many execution orders, but they were stamped by my assistants using my signature without my knowledge.</li>
-                <li><strong>Chain of Command:</strong> I was merely a middle-manager taking direct orders from my superior, Heinrich Himmler.</li>
-                <li><strong>Intelligence Focus:</strong> My actual duties were focused on foreign intelligence and espionage, not the administration of death camps.</li>
-            </ul>`,
-            prosecution: `<ul>
-                <li><strong>Commander of Terror:</strong> As head of the RSHA, Kaltenbrunner directly controlled the Gestapo and the mobile death squads that murdered millions in Eastern Europe.</li>
-                <li><strong>Direct Involvement:</strong> He personally inspected the Mauthausen concentration camp to witness a demonstration of a gas chamber to ensure its "efficiency."</li>
-                <li><strong>Execution Orders:</strong> He issued the "Bullet Decree," ordering the execution of captured Allied prisoners of war and escaped inmates, violating international law.</li>
-            </ul>`,
+            defense: [
+                { title: "Rubber Stamp", text: "My signature appears on many execution orders, but they were stamped by my assistants using my signature without my knowledge." },
+                { title: "Chain of Command", text: "I was merely a middle-manager taking direct orders from my superior, Heinrich Himmler." },
+                { title: "Intelligence Focus", text: "My actual duties were focused on foreign intelligence and espionage, not the administration of death camps." }
+            ],
+            prosecution: [
+                { title: "Commander of Terror", text: "As head of the RSHA, Kaltenbrunner directly controlled the Gestapo and the mobile death squads that murdered millions in Eastern Europe." },
+                { title: "Direct Involvement", text: "He personally inspected the Mauthausen concentration camp to witness a demonstration of a gas chamber to ensure its 'efficiency.'" },
+                { title: "Execution Orders", text: "He issued the 'Bullet Decree,' ordering the execution of captured Allied prisoners of war and escaped inmates, violating international law." }
+            ],
             charges: "War Crimes, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Guilty of War Crimes and Crimes Against Humanity. Sentenced to death by hanging."
         },
@@ -1108,16 +1193,16 @@ const data = {
             name: "Rudolf Höss",
             role: "Commandant of Auschwitz",
             overview: "Höss oversaw Auschwitz from 1940 to 1943. Under his leadership, the camp was transformed into the largest killing center in the Nazi empire. He organized the logistics of mass deportations and the camp’s murder system, bearing direct responsibility for the deaths of over a million people.",
-            defense: `<ul>
-                <li><strong>Following Orders:</strong> I was a soldier given an impossible quota by my superiors. I did not invent the policies; I only carried them out.</li>
-                <li><strong>Bureaucratic Detachment:</strong> I viewed my role purely as a camp administrator and factory manager. I acted without emotion or personal hatred.</li>
-                <li><strong>Systemic Pressure:</strong> In a totalitarian state, a soldier cannot question orders from the top without facing severe punishment himself.</li>
-            </ul>`,
-            prosecution: `<ul>
-                <li><strong>Innovator of Mass Murder:</strong> Höss actively sought ways to make killing faster and cheaper, introducing the use of Zyklon B poison gas.</li>
-                <li><strong>Scale of Destruction:</strong> Under his direct command at Auschwitz, over 1.1 million innocent men, women, and children were systematically murdered.</li>
-                <li><strong>Cruel Deception:</strong> He designed a system that tricked victims into entering gas chambers disguised as shower rooms to maintain "order" during the executions.</li>
-            </ul>`,
+            defense: [
+                { title: "Following Orders", text: "I was a soldier given an impossible quota by my superiors. I did not invent the policies; I only carried them out." },
+                { title: "Bureaucratic Detachment", text: "I viewed my role purely as a camp administrator and factory manager. I acted without emotion or personal hatred." },
+                { title: "Systemic Pressure", text: "In a totalitarian state, a soldier cannot question orders from the top without facing severe punishment himself." }
+            ],
+            prosecution: [
+                { title: "Innovator of Mass Murder", text: "Höss actively sought ways to make killing faster and cheaper, introducing the use of Zyklon B poison gas." },
+                { title: "Scale of Destruction", text: "Under his direct command at Auschwitz, over 1.1 million innocent men, women, and children were systematically murdered." },
+                { title: "Cruel Deception", text: "He designed a system that tricked victims into entering gas chambers disguised as shower rooms to maintain 'order' during the executions." }
+            ],
             charges: "War Crimes, Crimes Against Humanity, Conspiracy to Commit Crimes",
             historical: "Tried by the Supreme National Tribunal in Poland (not the main IMT in Nuremberg, though he testified there). Found guilty of murder. Sentenced to death by hanging (executed at Auschwitz in 1947)."
         },
@@ -1127,16 +1212,16 @@ const data = {
             name: "Karl Dönitz",
             role: "Commander of the German Navy, later Head of State",
             overview: "Dönitz led Nazi Germany’s navy and pushed unrestricted submarine warfare to weaken Allied supply lines, ordering attacks on civilian shipping. Because of his fanatical loyalty, Hitler named him as his successor. After Hitler’s death, Dönitz briefly became head of state before surrendering to the Allies.",
-            defense: `<ul>
-                <li><strong>Standard Military Conduct:</strong> I fought a naval war at sea, employing the same submarine tactics that Allied commanders used against us.</li>
-                <li><strong>Victor's Justice:</strong> This tribunal is simply the winners punishing the losers for standard wartime military actions.</li>
-                <li><strong>Loyal Soldier:</strong> As a military commander, I was obligated to follow the Head of State and defend my country during a total war.</li>
-            </ul>`,
-            prosecution: `<ul>
-                <li><strong>Violating Rules of War:</strong> Dönitz ordered "unrestricted submarine warfare," actively targeting and sinking unarmed civilian and merchant ships.</li>
-                <li><strong>No Rescue Orders:</strong> He issued the "Laconia Order," expressly forbidding his submarine crews from rescuing survivors of torpedoed ships, leaving them to drown.</li>
-                <li><strong>Ideological Supporter:</strong> He was a dedicated Nazi who prolonged the devastating war and was trusted enough by Hitler to be named his successor.</li>
-            </ul>`,
+            defense: [
+                { title: "Standard Military Conduct", text: "I fought a naval war at sea, employing the same submarine tactics that Allied commanders used against us." },
+                { title: "Victor's Justice", text: "This tribunal is simply the winners punishing the losers for standard wartime military actions." },
+                { title: "Loyal Soldier", text: "As a military commander, I was obligated to follow the Head of State and defend my country during a total war." }
+            ],
+            prosecution: [
+                { title: "Violating Rules of War", text: "Dönitz ordered 'unrestricted submarine warfare,' actively targeting and sinking unarmed civilian and merchant ships." },
+                { title: "No Rescue Orders", text: "He issued the 'Laconia Order,' expressly forbidding his submarine crews from rescuing survivors of torpedoed ships, leaving them to drown." },
+                { title: "Ideological Supporter", text: "He was a dedicated Nazi who prolonged the devastating war and was trusted enough by Hitler to be named his successor." }
+            ],
             charges: "Crimes Against Peace, War Crimes, Conspiracy to Commit Crimes",
             historical: "Guilty of Crimes Against Peace and War Crimes. Sentenced to 10 years in prison."
         }
@@ -1234,6 +1319,7 @@ const app = {
     openCase: function(id) {
         this.state.currentDefendantId = id;
         const def = data.defendants.find(d => d.id === id);
+        const isJudged = !!this.state.judgments[id];
         
         // Populate Data
         document.getElementById('case-image').src = def.image;
@@ -1241,15 +1327,17 @@ const app = {
         document.getElementById('case-name').innerText = def.name;
         document.getElementById('case-role').innerText = def.role;
         document.getElementById('case-overview').innerHTML = def.overview;
-        document.getElementById('case-prosecution').innerHTML = def.prosecution;
-        document.getElementById('case-defense').innerHTML = def.defense;
         document.getElementById('case-potential-charges').innerText = def.charges;
+
+        // Render Exhibits
+        this.renderExhibits('case-prosecution-exhibits', def.prosecution, isJudged);
+        this.renderExhibits('case-defense-exhibits', def.defense, isJudged);
 
         // Reset form or load existing
         const form = document.getElementById('judgment-form');
         form.reset();
         
-        if (this.state.judgments[id]) {
+        if (isJudged) {
             const j = this.state.judgments[id];
             
             // Charges
@@ -1276,6 +1364,36 @@ const app = {
         document.querySelector('.tabs .tab:nth-child(1)').click();
         
         this.showScreen('screen-case');
+    },
+
+    renderExhibits: function(containerId, evidenceArray, isJudged) {
+        const container = document.getElementById(containerId);
+        let html = '<div class="exhibit-list">';
+        
+        evidenceArray.forEach((item, index) => {
+            const letter = String.fromCharCode(65 + index); // A, B, C...
+            // If the case is already judged, leave the folders unsealed to make review easier
+            const stateClass = isJudged ? 'unsealed' : 'sealed'; 
+            
+            html += `
+            <div class="exhibit-card ${stateClass}" onclick="app.unsealExhibit(this)">
+                <div class="seal-tape">CONFIDENTIAL<small>Click to Unseal</small></div>
+                <div class="exhibit-content">
+                    <h4>Exhibit ${letter}: ${item.title}</h4>
+                    <p>${item.text}</p>
+                </div>
+            </div>`;
+        });
+        
+        html += '</div>';
+        container.innerHTML = html;
+    },
+
+    unsealExhibit: function(element) {
+        if (element.classList.contains('sealed')) {
+            element.classList.remove('sealed');
+            element.classList.add('unsealed');
+        }
     },
 
     switchTab: function(tabElement, targetId) {
